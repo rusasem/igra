@@ -1,3 +1,4 @@
+//========================================================================
 #include "TXLib.h"
 
 struct Personage
@@ -20,9 +21,39 @@ txCreateWindow (800, 600);
     int t = 710;
     HDC h = txLoadImage("картинки/враг.bmp");
     int y = 30;
-    //Personage hhh1= 710,270,txLoadImage("картинки/враг.bmp");
+    Personage hhh1= {710,270,txLoadImage("картинки/1000-7.bmp"),10,10};
     while(!GetAsyncKeyState(VK_ESCAPE))
+
+
+
+
     {
+
+    if(GetAsyncKeyState('W'))
+   hhh1.y=hhh1.y-10;
+
+    if(GetAsyncKeyState('S'))
+   hhh1.y=hhh1.y+10;
+
+    if(GetAsyncKeyState('D'))
+   hhh1.x=hhh1.x+10;
+
+    if(GetAsyncKeyState('A'))
+   hhh1.x=hhh1.x-10;
+
+    if(hhh1.x==0)
+    hhh1.x=hhh1.x+10;
+
+    if(hhh1.y==0)
+    hhh1.x=hhh1.y+10;
+
+    if(hhh1.x==800)
+    hhh1.x=hhh1.x-10;
+
+    if(hhh1.y==600)
+    hhh1.y=hhh1.y-10;
+
+
     txSetColor (TX_WHITE);
     txSetFillColor (TX_TRANSPARENT);
     txClear();
@@ -30,8 +61,8 @@ txCreateWindow (800, 600);
     txBegin();
     txBitBlt(txDC(),0,0,800,600,fon);
 
-    txBitBlt(txDC(),x,270,50,60,hhh);
-    x-=22;
+    txBitBlt(txDC(),hhh1.x,hhh1.y,50,60,hhh1.image);
+
     txBitBlt(txDC(),t,20,50,60,hh);
     t-=2;
     txBitBlt(txDC(),330,y,50,60,h);
