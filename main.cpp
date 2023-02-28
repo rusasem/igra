@@ -1,7 +1,7 @@
-//========================================================================
+
 #include "TXLib.h"
 
-struct Personage
+ struct Lkl
 {
   int x;
   int y;
@@ -11,69 +11,104 @@ struct Personage
 };
 
 int main()
-{
-txCreateWindow (800, 600);
-
-    HDC fon = txLoadImage("картинки/jj.bmp");
-    HDC hhh = txLoadImage("картинки/враг.bmp");
-    int x = 710;
-    HDC hh = txLoadImage("картинки/враг.bmp");
-    int t = 710;
-    HDC h = txLoadImage("картинки/враг.bmp");
-    int y = 30;
-    Personage hhh1= {710,270,txLoadImage("картинки/1000-7.bmp"),10,10};
-    while(!GetAsyncKeyState(VK_ESCAPE))
-
-
-
-
     {
+    txCreateWindow (800,600);
 
-    if(GetAsyncKeyState('W'))
-   hhh1.y=hhh1.y-10;
-
-    if(GetAsyncKeyState('S'))
-   hhh1.y=hhh1.y+10;
-
-    if(GetAsyncKeyState('D'))
-   hhh1.x=hhh1.x+10;
-
-    if(GetAsyncKeyState('A'))
-   hhh1.x=hhh1.x-10;
-
-    if(hhh1.x==0)
-    hhh1.x=hhh1.x+10;
-
-    if(hhh1.y==0)
-    hhh1.x=hhh1.y+10;
-
-    if(hhh1.x==800)
-    hhh1.x=hhh1.x-10;
-
-    if(hhh1.y==600)
-    hhh1.y=hhh1.y-10;
+    int x1_old;
+    int y1_old;
 
 
-    txSetColor (TX_WHITE);
-    txSetFillColor (TX_TRANSPARENT);
-    txClear();
+    HDC  background = txLoadImage ("fon.bmp");
 
-    txBegin();
-    txBitBlt(txDC(),0,0,800,600,fon);
+    Lkl lkl = {10, 30, txLoadImage("lkl.bmp"), 10, 10};
+    Lkl gg =  {300, 300, txLoadImage("gg.bmp"), 5, 5};
+    Lkl cc =  {700, 300, gg.image, 5, 5};
 
-    txBitBlt(txDC(),hhh1.x,hhh1.y,50,60,hhh1.image);
+    COLORREF color;
 
-    txBitBlt(txDC(),t,20,50,60,hh);
-    t-=2;
-    txBitBlt(txDC(),330,y,50,60,h);
-    y+=2;
+    char str[100];
 
-    txEnd();
-    txSleep(10);
+    while (!GetAsyncKeyState (VK_ESCAPE))
+    {
+      txClear();
 
+      txBegin();
+      x1_old = lkl.x;
+      y1_old = lkl.y;
+      txBitBlt (txDC(), 0, 0, 800,600,background);
+      txBitBlt (txDC(), lkl.x, lkl.y, 50, 52, lkl.image);
+      txBitBlt (txDC(), gg.x, gg.y, 80, 82, gg.image);
+      txBitBlt (txDC(), cc.x, cc.y, 80, 82, cc.image);
+
+
+       if(GetAsyncKeyState('W'))
+      {
+        lkl.y=lkl.y-lkl.vy;
+      }
+
+      if(GetAsyncKeyState('S'))
+      {
+        lkl.y=lkl.y+lkl.vy;
+      }
+
+      if(GetAsyncKeyState('A'))
+      {
+        lkl.x=lkl.x-lkl.vx;
+      }
+
+      if(GetAsyncKeyState('D'))
+      {
+        lkl.x=lkl.x+lkl.vx;
+      }
+
+     for(int x=lkl.x; x<lkl.x+50; x++)
+     {
+        for(int y=lkl.y; y<lkl.y+52; y++)
+        {
+            if(txGetPixel(x-1, y-1, txDC()) == RGB(255, 0, 0))
+            {
+                lkl.x=x1_old;
+                lkl.y=y1_old;
+            }
+        }
+     }
+
+
+
+
+      gg.y=gg.y+gg.vy;
+
+      if(gg.y<0 || gg.y>600)
+      {
+        gg.vy=-gg.vy;
+      }
+
+
+      cc.x=cc.x+cc.vx;
+
+      if(cc.x<700 || cc.x>800)
+      {
+        cc.vx=-cc.vx;
+      }
+
+      /*
+      txSetColor(TX_BLACK, 3);
+      sprintf(str, "x= %d y= %d", x1, y1);
+      txTextOut(510, 10, str);
+      */
+
+
+      txEnd();
+
+      txSleep(10);
     }
+    txDeleteDC (background);
+    txDeleteDC (lkl.image);
+    txDeleteDC (gg.image);
+    txDeleteDC (cc.image);
 
 txTextCursor (false);
+txDisableAutoPause();
 return 0;
 }
 

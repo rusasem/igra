@@ -1,98 +1,129 @@
-//========================================================================
-//! @file       Main.cpp
-//{=======================================================================
-//!
-//! @brief      <Заголовок>\n
-//! @brief      <Подзаголовок>
-//!
-//! @version    [Version 0.01 alpha, build 1]
-//! @author     Copyright (C) <Автор>, <Год> (<Имя> <Почта>)
-//! @date       <Дата>
-//!
-//! @par        Протестировано
-//!           - (TODO: список платформ)
-//!
-//! @todo     - (TODO: список ближайших планов по этому файлу)
-//!
-//! @bug      - (TODO: список найденных ошибок в этом файле)
-//!
-//! @par        История изменений файла
-//!           - Версия 0.01 Alpha
-//!             - Только что созданный файл
-//!
-//}=======================================================================
 
 #include "TXLib.h"
 
-struct Personage
+ struct Lkl
 {
   int x;
   int y;
-
   HDC image;
-
   int vx;
   int vy;
 };
 
-
-
-
-
 int main()
-
-
     {
-    txCreateWindow (800, 600);
-
-HDC fon = txLoadImage("картинки/jj.bmp");
-HDC hhh = txLoadImage("картинки/враг.bmp");
-int x = 710;
-HDC hh = txLoadImage("картинки/враг.bmp");
-int t = 30;
-HDC h = txLoadImage("картинки/враг.bmp");
-int y = 30;
+    txCreateWindow (800,600);
+    int y = 300;
+    int vy = 5;
+    int x = 300;
+    int vx = 5;
+    int x1_old;
+    int y1_old;
 
 
-//Personage hhh1= 710,270,txLoadImage("картинки/враг.bmp");
+    HDC  background = txLoadImage ("fon.bmp");
+    HDC  gg=txLoadImage ("gg.bmp");
+    HDC  cc=gg;
 
+    Lkl lkl = {10, 30, txLoadImage("lkl.bmp"), 10, 10};
+    Lkl gg = {10, 30, txLoadImage("gg.bmp"), 10, 10};
+    Lkl cc = {10, 30, gg.image, 10, 10};
 
-    while(!GetAsyncKeyState(VK_ESCAPE))
+    COLORREF color;
+
+    char str[100];
+
+    while (!GetAsyncKeyState (VK_ESCAPE))
     {
-    txSetColor (TX_WHITE);
-    txSetFillColor (TX_TRANSPARENT);
-    txClear();
+      txClear();
 
-    txBegin();
-    txBitBlt(txDC(),0,0,800,600,fon);
-
-    txBitBlt(txDC(),x,270,50,60,hhh);
-    x-=5;
-    txBitBlt(txDC(),x,20,50,60,hh);
-    t=22;
-    txBitBlt(txDC(),330,y,50,60,h);
-    y+=5;
+      txBegin();
+      x1_old = lkl.x;
+      y1_old = lkl.y;
+      txBitBlt (txDC(), 0, 0, 800,600,background);
+      txBitBlt (txDC(), lkl.x, lkl.y, 50, 52, lkl.image);
+      txBitBlt (txDC(), x, 300, 80,82,gg);
+      txBitBlt (txDC(), 400, y, 80,82,cc);     
 
 
+       if(GetAsyncKeyState('W'))
+      {
+        lkl.y=lkl.y-lkl.vy;
+      }
 
-    txSleep(10);
+      if(GetAsyncKeyState('S'))
+      {
+        lkl.y=lkl.y+lkl.vy;
+      }
+
+      if(GetAsyncKeyState('A'))
+      {
+        lkl.x=lkl.x-lkl.vx;
+      }
+
+      if(GetAsyncKeyState('D'))
+      {
+        lkl.x=lkl.x+lkl.vx;
+      }
+
+     for(int x=lkl.x; x<lkl.x+50; x++)
+     {
+        for(int y=lkl.y; y<lkl.y+52; y++)
+        {
+            if(txGetPixel(x-1, y-1, txDC()) == RGB(255, 0, 0))
+            {
+                lkl.x=x1_old;
+                lkl.y=y1_old;
+            }
+        }
+     }
+
+      
+
+
+      y=y+vy;
+
+      if(y<0)
+      {
+        vy=-vy;
+      }
+      if(y>600)
+      {
+        vy=-vy;
+      }
 
 
 
-    txEnd();
+      x=x+vx;
+
+      if(x>0)
+      {
+        vx=-vx;
+      }
+      if(x<800)
+      {
+        vx=-vx;
+      }
 
 
 
+      /*
+      txSetColor(TX_BLACK, 3);
+      sprintf(str, "x= %d y= %d", x1, y1);
+      txTextOut(510, 10, str);
+      */
 
 
+      txEnd();
 
-
-
-
-
+      txSleep(10);
     }
+    txDeleteDC (background);
+    txDeleteDC (lkl.image);
+    txDeleteDC (gg);
 
-    txTextCursor (false);
-    return 0;
-    }
+txTextCursor (false);
+txDisableAutoPause();
+return 0;
+}
 
